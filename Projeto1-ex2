@@ -1,0 +1,93 @@
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+import sys
+
+# Coordenadas do ponto
+point_position = [0.0, 0.0]
+
+# Cores
+dot_color = [0.0, 0.0, 1.0]  # Azul
+dot_color_pallet = [
+    (0.0, 0.0, 1.0),  # Azul
+    (0.0, 1.0, 0.0),  # Verde
+    (1.0, 0.5, 0.0),  # Laranja
+    (1.0, 0.0, 1.0),  # Magenta
+    (0.0, 0.5, 0.0),  # Verde escuro
+    (0.0, 1.0, 1.0),  # Ciano
+    (0.5, 0.5, 0.5),  # Cinza
+    (1.0, 1.0, 0.0),  # Amarelo
+    (1.0, 0.0, 0.0),  # Vermelho
+    (0.5, 0.0, 0.5)   # Roxo
+]
+
+# Variável para verificar se o botão esquerdo do mouse foi pressionado
+left_mouse_button_pressed = False
+
+def picked_color(key_stroke):
+    global dot_color
+    dot_color = dot_color_pallet[key_stroke]
+
+def keyboard(key, x, y):
+    number = ord(key) - ord('0')
+    if 0 <= number <= 9:
+        picked_color(number)
+    else:
+        print(b"Tecla invalida!")
+    glutPostRedisplay()  # Redesenha a tela após a troca de cor
+
+def draw_point():
+    glPointSize(5.0)
+    glColor3f(dot_color[0], dot_color[1], dot_color[2])
+
+    glBegin(GL_POINTS)
+    glVertex2f(point_position[0], point_position[1])
+    glEnd()
+    glutSwapBuffers()
+
+def draw():
+    glClearColor(0, 0, 0, 0)
+    glClear(GL_COLOR_BUFFER_BIT)
+    draw_point()
+
+def mouse(button, state, x, y):
+    global point_position, left_mouse_button_pressed
+    if button == GLUT_LEFT_BUTTON:
+        if state == GLUT_DOWN:
+            normalized_x, normalized_y = coordinates_converter(x, y)
+            point_position[0] = normalized_x
+            point_position[1] = normalized_y
+            left_mouse_button_pressed = True
+            glutPostRedisplay()
+
+def motion(x, y):
+    global point_position, left_mouse_button_pressed
+    if left_mouse_button_pressed:
+        normalized_x, normalized_y = coordinates_converter(x, y)
+        point_position[0] = normalized_x
+        point_position[1] = normalized_y
+        glutPostRedisplay()
+
+def passive_motion(x, y):
+    global left_mouse_button_pressed
+    left_mouse_button_pressed = False
+
+def coordinates_converter(x, y):
+    normalized_x = -1.0 + 2.0 * (x / 400.0)
+    normalized_y = -(-1.0 + 2.0 * (y / 400.0))
+    return normalized_x, normalized_y
+
+def main():
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
+    glutInitWindowPosition(50, 100)
+    glutInitWindowSize(400, 400)
+    glutCreateWindow(b"Exercicio 2 - OpenGL")
+    glutDisplayFunc(draw)
+    glutMouseFunc(mouse)
+    glutMotionFunc(motion)
+    glutPassiveMotionFunc(passive_motion)
+    glutKeyboardFunc(keyboard)
+    glutMainLoop()
+
+if __name__ == "__main__":
+    main()
