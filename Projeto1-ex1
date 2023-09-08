@@ -1,0 +1,80 @@
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+import sys
+
+# Coordenadas do ponto
+point_position = [0.0, 0.0]
+
+# Variável para verificar se o botão esquerdo do mouse foi pressionado
+left_mouse_button_pressed = False
+
+# Cor do ponto (azul)
+point_color = [0.0, 0.0, 1.0]
+
+def coordenates_converter(x, y):
+    normalized_x = -1.0 + 2.0 * (x / 400.0)
+    normalized_y = -(-1.0 + 2.0 * (y / 400.0))
+    return normalized_x, normalized_y
+
+def draw_point():
+    glPointSize(5.0)
+    glColor3f(point_color[0], point_color[1], point_color[2])
+
+    glBegin(GL_POINTS)
+    glVertex2f(point_position[0], point_position[1])
+    glEnd()
+    glFlush()
+
+def draw():
+    glClearColor(0, 0, 0, 0)
+    glClear(GL_COLOR_BUFFER_BIT)
+    draw_point()
+    glutSwapBuffers()
+
+def mouse(button, state, x, y):
+    global point_position, left_mouse_button_pressed
+    if button == GLUT_LEFT_BUTTON:
+        if state == GLUT_DOWN:
+            normalized_x, normalized_y = coordenates_converter(x, y)
+            point_position[0] = normalized_x
+            point_position[1] = normalized_y
+            left_mouse_button_pressed = True
+            glutPostRedisplay()
+
+def motion(x, y):
+    global point_position, left_mouse_button_pressed
+    if left_mouse_button_pressed:
+        normalized_x, normalized_y = coordenates_converter(x, y)
+        point_position[0] = normalized_x
+        point_position[1] = normalized_y
+        glutPostRedisplay()
+
+def passive_motion(x, y):
+    global left_mouse_button_pressed
+    left_mouse_button_pressed = False
+
+def main():
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
+    glutInitWindowPosition(50, 100)
+    glutInitWindowSize(400, 400)
+    glutCreateWindow(b"Exercicio 1 - OpenGL")
+    glutDisplayFunc(draw)
+    glutMouseFunc(mouse)
+    glutMotionFunc(motion)
+    glutPassiveMotionFunc(passive_motion)
+    glutMainLoop()
+
+if __name__ == "__main__":
+    main()
+
+
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
+    glutInitWindowPosition(50, 100)
+    glutInitWindowSize(400, 400)
+    glutCreateWindow(b"Exercicio 3 - OpenGL")
+    glutDisplayFunc(draw)
+    glutMouseFunc(mouse)
+    glutKeyboardFunc(keyboard)
+    glutMainLoop()
