@@ -1,0 +1,70 @@
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+import sys
+
+# armazena as coordenadas do centro
+center_x = 0
+center_y = 0
+radius = 0
+
+# desenha a circunferência usando o algoritmo de Bresenham
+def draw_circle(xc, yc, radius):
+    glBegin(GL_POINTS)
+    x = 0
+    y = radius
+    d = 3 - 2 * radius
+
+    while x <= y:
+        glVertex2f(xc + x, yc + y)
+        glVertex2f(xc - x, yc + y)
+        glVertex2f(xc + x, yc - y)
+        glVertex2f(xc - x, yc - y)
+        glVertex2f(xc + y, yc + x)
+        glVertex2f(xc - y, yc + x)
+        glVertex2f(xc + y, yc - x)
+        glVertex2f(xc - y, yc - x)
+
+        x += 1
+        if d < 0:
+            d += 4 * x + 6
+        else:
+            y -= 1
+            d += 4 * (x - y) + 10
+    glEnd()
+
+def display():
+    glClear(GL_COLOR_BUFFER_BIT)
+    glColor3f(1.0, 1.0, 1.0) 
+    glPointSize(2.0)  
+    draw_circle(center_x, center_y, radius)  # desenha a circunferência com o centro definido pelo clique do mouse
+    glFlush()
+
+def mouse_click(button, state, x, y):
+    global center_x, center_y, radius
+
+    if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
+        # transforma as coordenadas do clique do mouse em coordenadas OpenGL
+        center_x = x
+        center_y = glutGet(GLUT_WINDOW_HEIGHT) - y
+        radius = 100 # define o raio fixo para a circunferência
+        glutPostRedisplay() 
+
+def init():
+    glClearColor(0.0, 0.0, 0.0, 1.0) 
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), 0, glutGet(GLUT_WINDOW_HEIGHT)) 
+
+def main():
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
+    glutInitWindowSize(500, 500)  
+    glutCreateWindow(b"Circunferencia")
+    glutDisplayFunc(display)
+    glutMouseFunc(mouse_click)
+    init()
+    glutMainLoop()
+
+if __name__ == "__main__":
+    main()
