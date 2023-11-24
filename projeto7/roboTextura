@@ -953,6 +953,69 @@ def tecladoEspecial(tecla, x, y):
         thetaX -= 2
     glutPostRedisplay()
 
+def lightning():
+    light0_pos = [2.0, 2.0, 2.0, 1.0]
+    white = [1.0, 1.0, 1.0, 1.0]
+    black = [0.0, 0.0, 0.0, 1.0]
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light0_pos)
+    glLightfv(GL_LIGHT0, GL_AMBIENT, black)
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white)
+    glLightfv(GL_LIGHT0, GL_SPECULAR, white)
+
+    # Atenuação radial
+    # glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.5f)   # define a0
+    # glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.15f)    # define a1
+    # glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.1f)  # define a2
+
+    # Fonte de Luz Direcional - Efeito de Holofote
+    light1_pos = [-2.0, 0.0, 0.0, 1.0]
+    glLightfv(GL_LIGHT1, GL_POSITION, light1_pos)
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, white)
+    glLightfv(GL_LIGHT1, GL_SPECULAR, white)
+    direction = [1.0, 0.0, 0.0]
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction)       # vetor direção
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0)               # espalhamento angular
+    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.1)              # atenuação angular
+
+    # Parâmetros definidos globalmente
+    # global_ambient = [0.9, 0.9, 0.9, 1.0]
+    # glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient)
+    # Reflexão especular definida como a posição de visão corrente
+    # glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE)
+    # Habilitar cálculos de iluminação para ambas as faces dos polígonos
+    # glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE)
+
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glEnable(GL_LIGHT1)
+
+
+def init():
+    glEnable(GL_COLOR_MATERIAL)
+    glClearColor(0.0, 0.0, 0.0, 0.0)  # define a cor de fundo
+    glEnable(GL_DEPTH_TEST)  # habilita o teste de profundidade
+
+    # glShadeModel(GL_FLAT)
+    glShadeModel(GL_SMOOTH)
+    glEnable(GL_NORMALIZE)
+
+    glMatrixMode(GL_MODELVIEW)  # define que a matriz é a model view
+    glLoadIdentity()  # carrega a matriz de identidade
+    gluLookAt(4.0, 2.0, 1.0,  # posição da câmera
+              0.0, 0.0, 0.0,  # para onde a câmera aponta
+              0.0, 1.0, 0.0)  # vetor view-up
+
+    glMatrixMode(GL_PROJECTION)  # define que a matriz é a de projeção
+    glLoadIdentity()  # carrega a matriz de identidade
+    # glOrtho(-2.0, 2.0, -2.0, 2.0, 2.0, 8.0)  # define uma projeção ortogonal
+    # gluPerspective(45.0, 1.0, 2.0, 8.0)  # define uma projeção perspectiva
+    # glFrustum(-2.0, 2.0, -2.0, 2.0, 2.0, 8.0)  # define uma projeção perspectiva simétrica
+    # glFrustum(-2.0, 1.0, -1.0, 2.0, 2.0, 8.0)  # define uma projeção perspectiva oblíqua
+    glViewport(0, 0, 500, 500)
+
+    lightning()
+
 def main():
     global textures
     glutInit()
@@ -961,6 +1024,7 @@ def main():
     glutCreateWindow(b"Robo")
     glutDisplayFunc(desenha)
     glutSpecialFunc(tecladoEspecial)
+    init()
     
     textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
     textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
