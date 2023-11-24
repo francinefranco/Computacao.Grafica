@@ -1,1 +1,975 @@
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+from PIL import Image
 
+thetaX = 0.0
+thetaY = 0.0
+textures = []
+
+def load_texture(file_name):
+    image = Image.open(file_name)
+    width, height = image.size
+    image_data = image.tobytes("raw", "RGB", 0, -1)
+    texture_id = glGenTextures(1)
+
+    glBindTexture(GL_TEXTURE_2D, texture_id)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+    return texture_id
+
+def cabeca():
+    glEnable(GL_TEXTURE_2D)
+    
+    # Face 1
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def corpo():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def bracoEsq():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def bracoDir():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6 
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def anteBracoEsq():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6 
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def anteBracoDir():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6 
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+   
+def pernaEsq():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def pernaDir():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6 
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def pernaInfEsq():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def pernaInfDir():
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+   
+def desenha():
+    global thetaX, thetaY
+    glClearColor(0, 0, 0, 0) 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glEnable(GL_DEPTH_TEST)
+    
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(0.0, 0.5, 0.0)
+    glScalef(0.5, 0.5, 0.5)
+    cabeca()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(0.0, 0.1, 0.0)
+    glScalef(0.5, 0.9, 0.5)
+    corpo()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(0.23, 0.25, 0.0)
+    glScalef(0.3, 0.17, 0.3)
+    bracoEsq()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(-0.23, 0.25, 0.0)
+    glScalef(0.3, 0.17, 0.3)
+    bracoDir()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(0.42, 0.25, 0.0)
+    glScalef(0.3, 0.17, 0.3)
+    anteBracoEsq()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(-0.42, 0.25, 0.0)
+    glScalef(0.3, 0.17, 0.3)
+    anteBracoDir()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(0.08, -0.23, 0.0)
+    glScalef(0.17, 0.34, 0.3)
+    pernaEsq()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(-0.08, -0.23, 0.0)
+    glScalef(0.17, 0.34, 0.3)
+    pernaDir()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(0.08, -0.43, 0.0)
+    glScalef(0.17, 0.34, 0.3)
+    pernaInfEsq()
+    glPopMatrix()
+
+    glPushMatrix()
+    glRotatef(thetaX, 1.0, 0.0, 0.0)
+    glRotatef(thetaY, 0.0, 1.0, 0.0)
+    glTranslatef(-0.08, -0.43, 0.0)
+    glScalef(0.17, 0.34, 0.3)
+    pernaInfDir()
+    glPopMatrix()
+
+    glutSwapBuffers()
+
+def tecladoEspecial(tecla, x, y):
+    global thetaX, thetaY
+    if tecla == GLUT_KEY_RIGHT:
+        thetaY += 2
+    elif tecla == GLUT_KEY_LEFT:
+        thetaY -= 2
+    elif tecla == GLUT_KEY_UP:
+        thetaX += 2
+    elif tecla == GLUT_KEY_DOWN:
+        thetaX -= 2
+    glutPostRedisplay()
+
+def main():
+    global textures
+    glutInit()
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+    glutInitWindowSize(400, 400)
+    glutCreateWindow(b"Robo")
+    glutDisplayFunc(desenha)
+    glutSpecialFunc(tecladoEspecial)
+    
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+
+    glutMainLoop()
+
+if __name__ == "__main__":
+    main()
