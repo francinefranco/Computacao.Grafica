@@ -1,0 +1,508 @@
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+from PIL import Image
+from math import sin, pi, cos, radians
+
+thetaX = 0.0
+thetaY = 0.0
+textures = []
+cicloy = 0
+ciclox = 0
+tecla_press = [False, False, False, False]
+
+# Posição do robo
+robot_position = [0.0, 0.0, 0.0]
+
+# velocidade do robo
+robot_speed = 0.01
+
+def load_texture(file_name):
+    image = Image.open(file_name)
+    width, height = image.size
+    image_data = image.tobytes("raw", "RGB", 0, -1)
+    texture_id = glGenTextures(1)
+
+    glBindTexture(GL_TEXTURE_2D, texture_id)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+    return texture_id
+
+def cubo():
+    glEnable(GL_TEXTURE_2D)
+    
+    # Face 1
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glNormal3f(0, 0, 1)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glNormal3f(0, 0, -1)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glNormal3f(1, 0, 0)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glNormal3f(-1, 0, 0)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glNormal3f(0, 1, 0)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glNormal3f(0, -1, 0)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+
+    glEnable(GL_TEXTURE_2D)
+
+    # Face 1 
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glEnd()
+
+    # Face 2 
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 3 
+    glBindTexture(GL_TEXTURE_2D, textures[4])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 4 
+    glBindTexture(GL_TEXTURE_2D, textures[5])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    # Face 5 
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, 0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, 0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, 0.25, -0.25)
+    glEnd()
+
+    # Face 6
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_POLYGON)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(0.25, -0.25, 0.25)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(0.25, -0.25, -0.25)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-0.25, -0.25, -0.25)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+def lightning():
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+   
+    glLightfv(GL_LIGHT0,GL_POSITION, (-4, 4, -4))
+    glLightfv(GL_LIGHT0,GL_AMBIENT, (0, 0, 0))
+    glLightfv(GL_LIGHT0,GL_DIFFUSE,(1, 1, 1))
+
+def cabeca():
+        glPushMatrix()
+        glTranslatef(0.0, 0.5, 0.0)
+        glScalef(0.5, 0.5, 0.4)
+        cubo() #cabeca
+        glPopMatrix()
+
+def corpo():
+    glPushMatrix()
+    glTranslatef(0.0, 0.1, 0.0)
+    glScalef(0.5, 0.9, 0.3)
+    cubo() #corpo
+    glPopMatrix()
+
+def bracoEsq():
+    glPushMatrix()
+    glTranslatef(0.185, 0.23, 0.0)
+    glScalef(0.17, 0.3, 0.16)
+    cubo() #bracoEsq
+    glPopMatrix()
+
+def bracoDir():
+    glPushMatrix()
+    glTranslatef(-0.18, 0.23, 0.0)
+    glScalef(0.17, 0.3, 0.16)
+    cubo() #bracoDir
+    glPopMatrix()
+
+def anteBracoEsq():
+    glPushMatrix()
+    glTranslatef(0.185, 0.05, 0.0)
+    glScalef(0.17, 0.3, 0.15)
+    cubo() # anteBracoEsq
+    glPopMatrix()
+
+def anteBracoDir():
+    glPushMatrix()
+    glTranslatef(-0.18, 0.05, 0.0)
+    glScalef(0.17, 0.3, 0.15)
+    cubo() #anteBracoDir
+    glPopMatrix()
+
+def pernaEsq():    
+    glPushMatrix()
+    glTranslatef(0.08, -0.23, 0.0)
+    glScalef(0.17, 0.34, 0.2)
+    cubo() #pernaEsq
+    glPopMatrix()
+
+def pernaDir():
+    glPushMatrix()
+    glTranslatef(-0.08, -0.23, 0.0)
+    glScalef(0.17, 0.34, 0.2)
+    cubo() #pernaDir
+    glPopMatrix()
+
+def pernaInfEsq():
+    glPushMatrix()
+    glTranslatef(0.08, -0.43, 0.0)
+    glScalef(0.17, 0.34, 0.18)
+    cubo() #pernaInfEsq
+    glPopMatrix()
+
+def pernaInfDir():
+    glPushMatrix()
+    glTranslatef(-0.08, -0.43, 0.0)
+    glScalef(0.17, 0.34, 0.18)
+    cubo() #pernaInfDir
+    glPopMatrix()
+
+def grupoBracoDir():
+    global cicloy
+    glPushMatrix()
+    glTranslatef(0, 0.28, 0)
+    glRotatef(cicloy*20, 1, 0, 0)
+    glTranslatef(0, -0.28, 0)
+    bracoDir()
+    glTranslatef(0, 0.14, 0)
+    glRotatef(20+cicloy*20, 1, 0, 0)
+    glTranslatef(0, -0.14, 0)
+    anteBracoDir()
+    
+    glPopMatrix()
+
+def grupoBracoEsq():
+    global cicloy
+    glPushMatrix()
+    glTranslatef(0, 0.28, 0)
+    glRotatef(cicloy*-20, 1, 0, 0)
+    glTranslatef(0, -0.28, 0)
+    bracoEsq()    
+    glTranslatef(0, 0.14, 0)
+    glRotatef(20+cicloy*-20, 1, 0, 0)
+    glTranslatef(0, -0.14, 0)
+    anteBracoEsq()
+    
+    glPopMatrix()
+
+def grupoPernaEsq():
+    global cicloy
+    glPushMatrix()
+    glTranslatef(0, -0.1, 0)
+    glRotatef(cicloy*+20, 1, 0, 0)
+    glTranslatef(0, 0.1, 0)
+    pernaEsq()
+    glTranslatef(0, -0.3, 0)
+    if ciclox >= pi*3/2 or ciclox <= pi/2:
+        glRotatef(-40+abs(cicloy*40), 1, 0, 0)
+    glTranslatef(0, 0.3, 0)
+    pernaInfEsq()
+    
+    glPopMatrix()
+
+def grupoPernaDir():
+    global cicloy, ciclox
+    glPushMatrix()
+    glTranslatef(0, -0.1, 0)
+    glRotatef(cicloy*-20, 1, 0, 0)
+    glTranslatef(0, 0.1, 0)
+    pernaDir()
+    glTranslatef(0, -0.3, 0)
+    if pi/2 <= ciclox <= pi*3/2:
+        glRotatef(-40+abs(cicloy*40), 1, 0, 0)
+    glTranslatef(0, 0.3, 0)
+    pernaInfDir()
+    
+    glPopMatrix()
+
+def mover():
+    global thetaY, cicloy
+    global robot_position
+
+    if tecla_press[0]:
+        direcao = [0, 0, -robot_speed*(0.6*abs(cicloy)+0.4)]
+        nova_direcao = [0, 0, 0]
+        nova_direcao[0] = cos(radians(thetaY))*direcao[0]+sin(radians(thetaY))*direcao[2]
+        nova_direcao[2] = -sin(radians(thetaY))*direcao[0]+cos(radians(thetaY))*direcao[2]
+    
+        robot_position[0] += nova_direcao[0]
+        robot_position[1] += nova_direcao[1]
+        robot_position[2] += nova_direcao[2]
+
+    elif tecla_press[1]:
+        direcao = [0, 0, robot_speed*(0.6*abs(cicloy)+0.4)]
+        nova_direcao = [0, 0, 0]
+        nova_direcao[0] = cos(radians(thetaY))*direcao[0]+sin(radians(thetaY))*direcao[2]
+        nova_direcao[2] = -sin(radians(thetaY))*direcao[0]+cos(radians(thetaY))*direcao[2]
+    
+        robot_position[0] += nova_direcao[0]
+        robot_position[1] += nova_direcao[1]
+        robot_position[2] += nova_direcao[2]
+    
+    if tecla_press[2]:
+        thetaY -= 1
+    
+    if tecla_press[3]:
+        thetaY += 1
+
+def desenha():
+    global thetaY, ciclox, cicloy
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(45, 1, 0.1, 0.10) 
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    
+    gluLookAt(0.15, -0.10, 0.10, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+    
+    glPushMatrix()
+    glTranslatef(robot_position[0], robot_position[1], robot_position[2])
+    
+    if tecla_press[0] or tecla_press[1]:
+        glTranslatef(0, 1/20-abs(cicloy)/20, 0)
+        glRotatef(thetaY, 0, 1, 0)
+        grupoBracoDir()
+        grupoBracoEsq()
+        grupoPernaEsq()
+        grupoPernaDir()
+    else:
+        glRotatef(thetaY, 0, 1, 0)
+        bracoEsq()
+        bracoDir()
+        anteBracoEsq()
+        anteBracoDir()
+        pernaEsq()
+        pernaDir()
+        pernaInfEsq()
+        pernaInfDir()
+        
+    cabeca()
+    corpo()
+    mover()
+    
+    glPopMatrix()
+
+    if tecla_press[0]:
+        ciclox += robot_speed*5
+    elif tecla_press[1]:
+        ciclox -= robot_speed*5
+
+    if ciclox < 0:
+        ciclox = 2*pi
+
+    elif ciclox >= 2*pi:
+        ciclox = 0
+    cicloy = sin(ciclox)
+
+    glutSwapBuffers()
+
+def teclado_especial_up(tecla, x, y):
+    if tecla == GLUT_KEY_DOWN:
+        tecla_press[0] = False
+
+    # Move o robô para trás
+    elif tecla == GLUT_KEY_UP:
+        tecla_press[0] = False
+    
+    elif tecla == GLUT_KEY_LEFT:
+        tecla_press[2] = False
+    
+    elif tecla == GLUT_KEY_RIGHT:
+        tecla_press[3] = False
+
+def tecladoEspecial(tecla, x, y):
+    if tecla == GLUT_KEY_DOWN:
+        tecla_press[1] = True
+
+    # Move o robô para trás
+    elif tecla == GLUT_KEY_UP:
+        tecla_press[0] = True
+    
+    elif tecla == GLUT_KEY_LEFT:
+        tecla_press[2] = True
+    
+    elif tecla == GLUT_KEY_RIGHT:
+        tecla_press[3] = True
+        
+def init():
+    glEnable(GL_COLOR_MATERIAL)
+    glClearColor(0.0, 0.0, 0.0, 0.0) 
+    glEnable(GL_DEPTH_TEST)  # habilita o teste de profundidade
+    glShadeModel(GL_SMOOTH)
+    glEnable(GL_NORMALIZE)
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    gluPerspective(45.0, 1.0, 0.1, 100.0)
+
+    glMatrixMode(GL_MODELVIEW)  
+    glLoadIdentity()  
+    gluLookAt(4.0, 2.0, 1.0,  # posição da câmera
+              0.0, 0.0, 0.0,  # para onde a câmera aponta
+              0.0, 1.0, 0.0)  # vetor view-up
+
+    glMatrixMode(GL_PROJECTION)  # define que a matriz é a de projeção
+    glLoadIdentity()  
+
+    lightning()
+
+def main():
+    global textures
+    glutInit()
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+    glutInitWindowSize(800, 800)
+    glutCreateWindow(b"Humanoide")
+    glutDisplayFunc(desenha)
+    glutIdleFunc(desenha)
+    glutReshapeFunc(reshape)
+    glutSpecialFunc(tecladoEspecial)
+    glutSpecialUpFunc(teclado_especial_up)
+    init()
+    
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+    textures.append(load_texture(r"C:\Users\fraan\Documents\UNIFESP\CG\projeto7\metalTextura.jpg"))
+
+    glutMainLoop()
+
+def reshape(width, height):
+    if height == 0:
+        height = 1
+
+    glViewport(0, 0, width, height)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(45, (width / height), 0.1, 50.0)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+
+if __name__ == "__main__":
+    main()
